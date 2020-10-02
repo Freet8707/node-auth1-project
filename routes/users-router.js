@@ -43,15 +43,21 @@ router.post("/login", async (req, res, next) => {
     
 })
 
-router.post("/register", async (req, res) => {
-    
-    const newUser = await Users.addUser(req.body)
-    
-    if(newUser.message) {
-        return res.status(400).json(newUser)
-    }
-    
-    return res.status(201).json(newUser)
+router.post("/register", async (req, res, next) => {
+
+    try {
+        
+        const newUser = await Users.addUser(req.body)
+
+        if(newUser.message) {
+            return res.status(400).json(newUser)
+        }
+        
+        return res.status(201).json(newUser)
+
+    } catch(err) {
+        next(err)
+    } 
 
 })
 

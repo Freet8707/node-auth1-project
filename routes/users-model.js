@@ -46,7 +46,7 @@ const addUser = async (newUser) => {
         }
         
         const [id] = await db("users")
-            .insert({username: username, password: await bcrypt.hash(password, 6)})
+            .insert({username: username, password: await bcrypt.hash(password, 14)})
 
         const newUser = await findUser(id)
         
