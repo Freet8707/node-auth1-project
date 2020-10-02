@@ -1,9 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const Users = require("./users-model");
+const usersMiddleware = require("./users-middleware");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", usersMiddleware(), async (req, res) => {
 
     const users = await Users.getUsers()
     
