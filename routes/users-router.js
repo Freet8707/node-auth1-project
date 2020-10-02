@@ -9,4 +9,12 @@ router.get("/", async (req, res) => {
     res.status(200).json(users)
 });
 
+router.post("/register", async (req, res, next) => {
+    
+    const newUser = await Users.addUser(req.body)
+
+    res.status(201).json(newUser)
+
+})
+
 module.exports = router;
