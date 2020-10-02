@@ -8,17 +8,40 @@ const getUsers = async () => {
     return users
 }
 
+const findByUsername = async (username) => {
+
+    const foundUser = await db("users as u")
+        .select("u.username", "u.password")
+        .where("u.username", username)
+
+    return foundUser
+}
+
+const findUser = async (id) => {
+
+    const foundUser = await db("users")
+        .select("users.id", "users.username")
+        .where("users.id", id)
+        .first()
+
+    console.log(foundUser)
+
+    return foundUser        
+}
+
 const addUser = async (newUser) => {
     const { username, password } = newUser;
     
     try {
-        const id = await db("users")
+        const [id] = await db("users")
             .insert({username: username, password: await bcrypt.hash(password, 6)})
 
-        return id
+        const newUser = await findUser(id)
+        
+        return newUser
         
     } catch(err) {
-        next(err)
+        return console.log(err)
     }
     
 }
@@ -26,4 +49,5 @@ const addUser = async (newUser) => {
 module.exports = {
     getUsers,
     addUser,
+    findByUsername,
 }
