@@ -15,7 +15,7 @@ router.post("/login", async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
-        const user = Users.findByUsername(username)
+        const user = await Users.findByUsername(username)
 
         if(!user) {
             return res.status(401).json({
@@ -23,7 +23,7 @@ router.post("/login", async (req, res, next) => {
             })
         }
 
-        const passwordValid = bcrypt.compare(password, user.password);
+        const passwordValid = await bcrypt.compare(password, user.password);
 
         if(!passwordValid) {
             return res.status(401).json({
@@ -31,7 +31,7 @@ router.post("/login", async (req, res, next) => {
             })
         }
 
-        req.session.user = user
+        req.session.user = user;
 
         return res.status(200).json({
             message: `Logged in ! Welcome User: ${user.username} !`
@@ -46,8 +46,12 @@ router.post("/login", async (req, res, next) => {
 router.post("/register", async (req, res) => {
     
     const newUser = await Users.addUser(req.body)
-
-    res.status(201).json(newUser)
+    
+    if(newUser.message) {
+        return res.status(400).json(newUser)
+    }
+    
+    return res.status(201).json(newUser)
 
 })
 
